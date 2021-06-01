@@ -4,9 +4,9 @@ let chess=function(){
     let selectedcoin=[];
     let selectedcoinmoves=[];
     let matrixcolor=[];
-    let currentplayer="pla1";
-    let oppositeplayer="pla2";
-    let playercoins={"pla1":[],"pla2":[]};
+    let currentplayer="Pla1";
+    let oppositeplayer="Pla2";
+    let playercoins={"Pla1":[],"Pla2":[]};
     let canvas=document.getElementById('mycanvas');
     let ctx=canvas.getContext('2d');
 
@@ -33,66 +33,66 @@ let chess=function(){
     ctx.font="45px Aerial"
     ctx.fillText("♜",30,60);
     matrix[0][0]="♜";
-    playercoins["pla1"].push("♜");
+    playercoins["Pla1"].push("♜");
     ctx.fillText("♞",130,60);
     matrix[0][1]="♞";
-    playercoins["pla1"].push("♞");
+    playercoins["Pla1"].push("♞");
     ctx.fillText("♝",230,60);
     matrix[0][2]="♝";
-    playercoins["pla1"].push("♝");
+    playercoins["Pla1"].push("♝");
     ctx.fillText("♛",330,60);
     matrix[0][3]="♛";
-    playercoins["pla1"].push("♛");
+    playercoins["Pla1"].push("♛");
     ctx.fillText("♚",430,60);
     matrix[0][4]="♚";
-    playercoins["pla1"].push("♚");
+    playercoins["Pla1"].push("♚");
     ctx.fillText("♝",530,60);
     matrix[0][5]="♝";
-    playercoins["pla1"].push("♝");
+    playercoins["Pla1"].push("♝");
     ctx.fillText("♞",630,60);
     matrix[0][6]="♞";
-    playercoins["pla1"].push("♞");
+    playercoins["Pla1"].push("♞");
     ctx.fillText("♜",730,60);
     matrix[0][7]="♜";
-    playercoins["pla1"].push("♜");
+    playercoins["Pla1"].push("♜");
     let mat=[];
     for(let i=30;i<800;i+=100){
         ctx.fillText("♟",i,160);
         mat.push("♟");
-        playercoins["pla1"].push("♟");
+        playercoins["Pla1"].push("♟");
     }
     matrix[1]=mat;
     ctx.fillStyle="black";
     ctx.font="45px Aerial"
     ctx.fillText("♖",30,760);
     matrix[7][0]="♖";
-    playercoins["pla2"].push("♖");
+    playercoins["Pla2"].push("♖");
     ctx.fillText("♘",130,760);
     matrix[7][1]="♘";
-    playercoins["pla2"].push("♘");
+    playercoins["Pla2"].push("♘");
     ctx.fillText("♗",230,760);
     matrix[7][2]="♗";
-    playercoins["pla2"].push("♗");
+    playercoins["Pla2"].push("♗");
     ctx.fillText("♕",330,760);
     matrix[7][3]="♕";
-    playercoins["pla2"].push("♕");
+    playercoins["Pla2"].push("♕");
     ctx.fillText("♔",430,760);
     matrix[7][4]="♔";
-    playercoins["pla2"].push("♔");
+    playercoins["Pla2"].push("♔");
     ctx.fillText("♗",530,760);
     matrix[7][5]="♗";
-    playercoins["pla2"].push("♗");
+    playercoins["Pla2"].push("♗");
     ctx.fillText("♘",630,760);
     matrix[7][6]="♘";
-    playercoins["pla2"].push("♘");
+    playercoins["Pla2"].push("♘");
     ctx.fillText("♖",730,760);
     matrix[7][7]="♖";
-    playercoins["pla2"].push("♖");
+    playercoins["Pla2"].push("♖");
     mat=[];
     for(let i=30;i<800;i+=100){
         ctx.fillText("♙",i,660);
         mat.push("♙");
-        playercoins["pla2"].push("♙");
+        playercoins["Pla2"].push("♙");
     }
     matrix[6]=mat;
     ctx.stroke();
@@ -105,7 +105,6 @@ let chess=function(){
         const rect = canvas.getBoundingClientRect()
         const x =Math.round(event.clientX - rect.left);
         const y =Math.round(event.clientY - rect.top);
-        console.log(x,y);
         move(x,y);
     }
 
@@ -128,7 +127,7 @@ let chess=function(){
     let enemycoins=function(coin){
         let opcoins=playercoins[oppositeplayer];
         for(let i=0;i<opcoins.length;i++){
-            if(opcoins[i]==coin) return true;
+            if(opcoins[i]==coin && opcoins[i]!=0) return true;
         }
         return false;
     }
@@ -143,14 +142,22 @@ let chess=function(){
         }
     }
 
+    let findcurrentplayer=function(coin){
+        let opcoins=playercoins[currentplayer];
+        for(let i=0;i<opcoins.length;i++){
+            if(opcoins[i]==coin) return true;
+        }
+        return false;
+    }
+
     let move=function(x,y){
+        let a=matrixposition(x,y);
         if(selectedcoin.length==0){
-            let a=matrixposition(x,y);
-            console.log(a)
-            findpossiblemoves(a[0],a[1]);
+            let coin=matrix[a[0]][a[1]];
+            if(findcurrentplayer(coin)==false) alert("This is not your move !") 
+            else findpossiblemoves(a[0],a[1]);
         }
         else{
-            let a= matrixposition(x, y);
             let flag=0;
             selectedcoinmoves.forEach(ele => {
                 if(ele[0]==a[0] && ele[1]==a[1]){
@@ -167,13 +174,13 @@ let chess=function(){
                     ctx.fillStyle="black";
                     ctx.fillText(selectedcoin[0],(a[1]*100)+30,(a[0]*100)+60);
                     flag=1;
-                    if (currentplayer=="pla1"){
-                        currentplayer="pla2";
-                        oppositeplayer="pla1";
+                    if (currentplayer=="Pla1"){
+                        currentplayer="Pla2";
+                        oppositeplayer="Pla1";
                     }
                     else{
-                        currentplayer="pla1";
-                        oppositeplayer="pla2";
+                        currentplayer="Pla1";
+                        oppositeplayer="Pla2";
                     }
                     selectedcoin=[];
                     selectedcoinmoves=[];
@@ -227,16 +234,18 @@ let chess=function(){
             console.log(selectedcoinmoves);
         }
         else if(coin=="♟"){
-            if(i==1){
-                selectedcoinmoves.push([i+2,j]);
-            }
-            selectedcoinmoves.push([i+1,j]);
+            if(i==1 && matrix[i+2][j]==0) selectedcoinmoves.push([i+2,j]);
+            if(matrix[i+1][j]==0) selectedcoinmoves.push([i+1,j]);
+
+            if(enemycoins(matrix[i+1][j+1])==true) selectedcoinmoves.push([i+1,j+1]);
+            if(enemycoins(matrix[i+1][j-1])==true) selectedcoinmoves.push([i+1,j-1]);
         }
         else if(coin=="♙"){
-            if(i==6){
-                selectedcoinmoves.push([i-2,j]);
-            }
-            selectedcoinmoves.push([i-1,j]);
+            if(i==6 && matrix[i-2][j]==0) selectedcoinmoves.push([i-2,j]);
+            if(matrix[i-1][j]==0) selectedcoinmoves.push([i-1,j]);
+
+            if(enemycoins(matrix[i-1][j+1])==true) selectedcoinmoves.push([i-1,j+1]);
+            if(enemycoins(matrix[i-1][j-1])==true) selectedcoinmoves.push([i-1,j-1]);
         }
         else if(coin=="♝" || coin=="♗"){
             //for diagonal
@@ -399,15 +408,39 @@ let chess=function(){
             }
         }
         else if(coin=="♘" || coin=="♞"){
-            if(i+2<8 && j+1<8) selectedcoinmoves.push([i+2,j+1]);
-            if(i+2<8 && j-1>=0) selectedcoinmoves.push([i+2,j-1]);
-            if(i-2>=0 && j+1<8) selectedcoinmoves.push([i-2,j+1]);
-            if(i-2>=0 && j-1>=0) selectedcoinmoves.push([i-2,j-1]);
+            if(i+2<8 && j+1<8){
+                if(matrix[i+2][j+1]==0 || enemycoins(matrix[i+2][i+1])==true)
+                selectedcoinmoves.push([i+2,j+1]);
+            }
+            if(i+2<8 && j-1>=0){
+                if(matrix[i+2][j-1]==0 || enemycoins(matrix[i+2][j-1])==true)
+                selectedcoinmoves.push([i+2,j-1]);
+            }
+            if(i-2>=0 && j+1<8){
+                if(matrix[i-2][j+1]==0 || enemycoins(matrix[i-2][j+1])==true)
+                selectedcoinmoves.push([i-2,j+1]);
+            }
+            if(i-2>=0 && j-1>=0){
+                if(matrix[i-2][j-1]==0 || enemycoins(matrix[i-2][j-1])==true)
+                selectedcoinmoves.push([i-2,j-1]);
+            }
 
-            if(i+1<8 && j+2<8) selectedcoinmoves.push([i+1,j+2]);
-            if(i-1>=0 && j+2<8) selectedcoinmoves.push([i-1,j+2]);
-            if(i+1<8 && j-2>=0) selectedcoinmoves.push([i+1,j-2]);
-            if(i-1>=0 && j-2>=0) selectedcoinmoves.push([i-1,j-2]);
+            if(i+1<8 && j+2<8){
+                if(matrix[i+1][j+2]==0 || enemycoins(matrix[i+1][j+2])==true)
+                selectedcoinmoves.push([i+1,j+2]);
+            }
+            if(i-1>=0 && j+2<8){
+                if(matrix[i-1][j+2]==0 || enemycoins(matrix[i-1][j+2])==true)
+                selectedcoinmoves.push([i-1,j+2]);
+            }
+            if(i+1<8 && j-2>=0){
+                if(matrix[i+1][j-2]==0 || enemycoins(matrix[i+1][j-2])==true)
+                selectedcoinmoves.push([i+1,j-2]);
+            }
+            if(i-1>=0 && j-2>=0){
+                if(matrix[i-1][j-2]==0 || enemycoins(matrix[i-1][j-2])==true)
+                selectedcoinmoves.push([i-1,j-2]);
+            }
         }
 
     }
