@@ -6,6 +6,7 @@ let chess=function(){
     let matrixcolor=[];
     let currentplayer="Pla1";
     let oppositeplayer="Pla2";
+    let rungame=true;
     let playercoins={"Pla1":[],"Pla2":[]};
     let canvas=document.getElementById('mycanvas');
     let ctx=canvas.getContext('2d');
@@ -105,7 +106,8 @@ let chess=function(){
         const rect = canvas.getBoundingClientRect()
         const x =Math.round(event.clientX - rect.left);
         const y =Math.round(event.clientY - rect.top);
-        move(x,y);
+        if(rungame==true) move(x,y);
+        else alert("Game over !. Restart game");
     }
 
     let matrixposition=function(x,y){
@@ -150,6 +152,14 @@ let chess=function(){
         return false;
     }
 
+    let checkmate=function(){
+        let opcoins=playercoins[oppositeplayer];
+        for(let i=0;i<opcoins.length;i++){
+            if(opcoins[i]=="♕" || opcoins[i]=="♛") return true
+        }
+        return false;
+    }
+
     let move=function(x,y){
         let a=matrixposition(x,y);
         if(selectedcoin.length==0){
@@ -174,6 +184,10 @@ let chess=function(){
                     ctx.fillStyle="black";
                     ctx.fillText(selectedcoin[0],(a[1]*100)+30,(a[0]*100)+60);
                     flag=1;
+                    if(checkmate()==false){
+                        alert(`${currentplayer} wins  🎉`)
+                        rungame=false;
+                    }
                     if (currentplayer=="Pla1"){
                         currentplayer="Pla2";
                         oppositeplayer="Pla1";
