@@ -11,6 +11,8 @@ let chess=function(){
     let canvas=document.getElementById('mycanvas');
     let ctx=canvas.getContext('2d');
     var alertaudio = new Audio("ding.mp3");
+    //for check mate
+    let allcoinmoves={};
     let col="grey";
     for(let i=100;i<801;i+=100){
         let col1=col;
@@ -153,7 +155,7 @@ let chess=function(){
     let findcurrentplayer=function(coin){
         let opcoins=playercoins[currentplayer];
         for(let i=0;i<opcoins.length;i++){
-            if(opcoins[i]==coin) return true;
+            if(opcoins[i]==coin && opcoins[i]!=0) return true;
         }
         return false;
     }
@@ -165,10 +167,22 @@ let chess=function(){
         ctx.fillText(coin,(x*100)+30,(y*100)+60);
     }
 
+    let coinspossiblemoves=function(){
+        for(let i=0;i<8;i++){
+            for(let j=0;j<8;j++){
+                if(matrix[i][j]!=0){
+                    findpossiblemoves(i,j);
+                    allcoinmoves[matrix[i][j]].push(selectedcoinmoves);
+                    selectedcoinmoves=[];
+                }
+            }
+        }        
+    }
+
     let checkmate=function(){
         let opcoins=playercoins[oppositeplayer];
         for(let i=0;i<opcoins.length;i++){
-            if(opcoins[i]=="♕" || opcoins[i]=="♛") return false
+            if(opcoins[i]=="♚" || opcoins[i]=="♔") return false
         }
         return true;
     }
@@ -331,7 +345,7 @@ let chess=function(){
                 else break;
             }
         }
-        else if(coin=="♚" || coin=="♔"){
+        else if(coin=="♕" || coin=="♛"){
             //for vertical moves
             for(let a=i-1;a>=0;a--){
                 if(matrix[a][j]==0) selectedcoinmoves.push([a,j]);
@@ -412,7 +426,7 @@ let chess=function(){
             }
 
         }
-        else if(coin=="♕" || coin=="♛"){
+        else if(coin=="♔" || coin=="♚"){
             if(i+1<8 &&j+1<8){
                 if(matrix[i+1][j+1]==0) selectedcoinmoves.push([i+1,j+1]);
                 else if(enemycoins(matrix[i+1][j+1])==true) selectedcoinmoves.push([i+1,j+1]);
@@ -482,6 +496,10 @@ let chess=function(){
             }
         }
 
+    }
+    //coinspossiblemoves()
+    return{
+        allcoinmoves
     }
     
 }
