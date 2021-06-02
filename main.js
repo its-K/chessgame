@@ -12,7 +12,7 @@ let chess=function(){
     let ctx=canvas.getContext('2d');
     var alertaudio = new Audio("ding.mp3");
     //for check mate
-    let allcoinmoves={};
+    let check={"Pla1":["♔",false],"Pla2":["♚",false]};
     let col="grey";
     for(let i=100;i<801;i+=100){
         let col1=col;
@@ -167,23 +167,162 @@ let chess=function(){
         ctx.fillText(coin,(x*100)+30,(y*100)+60);
     }
 
-    let coinspossiblemoves=function(){
+    let kingcheckmoves=function(i,j){
+        //for vertical moves
+        for(let a=i-1;a>=0;a--){
+            if(enemycoins(matrix[a][j])==true){
+                if(matrix[a][j]=="♖" || matrix[a][j]=="♕" || matrix[a][j]=="♜" || matrix[a][j]=="♛"){
+                return true;
+                }
+                break;
+            }
+            else if(enemycoins(matrix[a][j])==false && matrix[a][j]!=0) break;
+        }
+        for(let a=i+1;a<8;a++){
+            if(enemycoins(matrix[a][j])==true){
+                if(matrix[a][j]=="♖" || matrix[a][j]=="♕" || matrix[a][j]=="♜" || matrix[a][j]=="♛"){
+                return true;
+                }
+                break;
+            }
+        else if(enemycoins(matrix[a][j])==false && matrix[a][j]!=0) break;
+        }
+        //for horizontal moves
+        for(let a=j-1;a>=0;a--){
+            if(enemycoins(matrix[i][a])==true){
+                if(matrix[i][a]=="♖" || matrix[i][a]=="♕" || matrix[i][a]=="♜" || matrix[i][a]=="♛"){
+                return true;
+                }
+                break;
+            }
+            else if(enemycoins(matrix[i][a])==false && matrix[i][a]!=0) break;
+        }
+        for(let a=j+1;a<8;a++){
+            if(enemycoins(matrix[i][a])==true){
+                if(matrix[i][a]=="♖" || matrix[i][a]=="♕" || matrix[i][a]=="♜" || matrix[i][a]=="♛"){
+                return true;
+                }
+                break;
+            }
+            else if(enemycoins(matrix[i][a])==false && matrix[i][a]!=0) break;
+        }
+
+        //for vertical diagonal
+        let a=i+1;
+        let b=j+1;
+        while(a<8 && b<8){
+            if(enemycoins(matrix[a][b])==true){
+                if(matrix[a][b]=="♝" || matrix[a][b]=="♗" || matrix[a][b]=="♕" || matrix[a][b]=="♛"){
+                return true;
+                }
+                break;
+            }
+            else if(enemycoins(matrix[a][b])==false && matrix[a][b]!=0) break;
+            a++;
+            b++;
+        }
+
+        a=i-1;
+        b=j-1;
+        while(a>=0 && b>=0){
+            if(enemycoins(matrix[a][b])==true){
+                if(matrix[a][b]=="♝" || matrix[a][b]=="♗" || matrix[a][b]=="♕" || matrix[a][b]=="♛"){
+                return true;
+                }
+                break;
+            }
+            else if(enemycoins(matrix[a][b])==false && matrix[a][b]!=0) break;
+            a--;
+            b--;
+        }
+        //for horizontal diagonal
+        a=i-1;
+        b=j+1;
+        while(a>=0 && b<8){
+            if(enemycoins(matrix[a][b])==true){
+                if(matrix[a][b]=="♝" || matrix[a][b]=="♗" || matrix[a][b]=="♕" || matrix[a][b]=="♛"){
+                return true;
+                }
+                break;
+            }
+            else if(enemycoins(matrix[a][b])==false && matrix[a][b]!=0) break;
+            a--;
+            b++;
+        }
+
+        a=i+1;
+        b=j-1;
+        while(a<8 && b>=0){
+            if(enemycoins(matrix[a][b])==true){
+                if(matrix[a][b]=="♝" || matrix[a][b]=="♗" || matrix[a][b]=="♕" || matrix[a][b]=="♛"){
+                return  true;
+                }
+                break;
+            }
+            else if(enemycoins(matrix[a][b])==false && matrix[a][b]!=0) break;
+            a++;
+            b--;
+        }
+
+        //for l movement
+        if(i+2<8 && j+1<8){
+            if(enemycoins(matrix[i+2][j+1])==true) {
+                if(matrix[i+2][j+1]=="♘" || matrix[i+2][j+1]=="♞") return true;
+            }
+        }
+        if(i+2<8 && j-1>=0){
+            if(enemycoins(matrix[i+2][j-1])==true){
+                if(matrix[i+2][j-1]=="♘" || matrix[i+2][j-1]=="♞") return true;
+            }
+        }
+        if(i-2>=0 && j+1<8){
+            if(enemycoins(matrix[i-2][j+1])==true){
+                if(matrix[i-2][j+1]=="♘" || matrix[i-2][j+1]=="♞") return true;
+            }
+        }
+        if(i-2>=0 && j-1>=0){
+            if(enemycoins(matrix[i-2][j-1])==true) {
+                if(matrix[i-2][j-1]=="♘" || matrix[i-2][j-1]=="♞") return true;
+            }
+        }
+
+        if(i+1<8 && j+2<8){
+            if(enemycoins(matrix[i+1][j+2])==true) {
+                if(matrix[i+1][j+2]=="♘" || matrix[i+1][j+2]=="♞") return true;
+            }
+        }
+        if(i-1>=0 && j+2<8){
+            if(enemycoins(matrix[i-1][j+2])==true){
+                if(matrix[i-1][j+2]=="♘" || matrix[i-1][j+2]=="♞") return true;
+            }
+        }
+        if(i+1<8 && j-2>=0){
+            if(enemycoins(matrix[i+1][j-2])==true){
+                if(matrix[i+1][j-2]=="♘" || matrix[i+1][j-2]=="♞") return true;
+            }
+        }
+        if(i-1>=0 && j-2>=0){
+            if(enemycoins(matrix[i-1][j-2])==true){
+                if(matrix[i-1][j-2]=="♘" || matrix[i-1][j-2]=="♞") return true;
+            }
+        }
+
+        return false;
+    }
+
+    let checkmovepossible=function(player){
+        console.log("Check logic");
+        let king=check[player][0];
         for(let i=0;i<8;i++){
             for(let j=0;j<8;j++){
-                if(matrix[i][j]!=0){
-                    findpossiblemoves(i,j);
-                    console.log(selectedcoinmoves);
-                    if(allcoinmoves[matrix[i][j]]){
-                        selectedcoinmoves.forEach(ele => {
-                            allcoinmoves[matrix[i][j]].push(ele);
-                        });
+                if(matrix[i][j]==king){
+                    if(kingcheckmoves(i,j)==true) {
+                        return true;
                     }
-                    else allcoinmoves[matrix[i][j]]=selectedcoinmoves;
-                    selectedcoinmoves=[];
-                    selectedcoin=[];
                 }
             }
-        }        
+        }
+        return false;
     }
 
     let checkmate=function(){
@@ -192,6 +331,15 @@ let chess=function(){
             if(opcoins[i]=="♚" || opcoins[i]=="♔") return false
         }
         return true;
+    }
+
+    let findking=function(player){
+        let coin=check[player][0];
+        for(let i=0;i<8;i++){
+            for(let j=0;j<8;j++){
+                if(matrix[i][j]==coin) return [i,j];
+            }
+        }
     }
 
     let move=function(x,y){
@@ -244,6 +392,13 @@ let chess=function(){
                     }
                     selectedcoin=[];
                     selectedcoinmoves=[];
+                    if(checkmovepossible(currentplayer)==true){
+                        alert("Check !");
+                        ctx.font="45px Aerial"
+                        let a=findking(currentplayer);
+                        findpossiblemoves(a[0],a[1]);
+                        selectedcoinhighlight(matrix[a[0]][a[1]],a[1],a[0]);
+                    }
                 }
             });
             ctx.font="45px Aerial"
@@ -432,36 +587,141 @@ let chess=function(){
         }
         else if(coin=="♔" || coin=="♚"){
             if(i+1<8 &&j+1<8){
-                if(matrix[i+1][j+1]==0) selectedcoinmoves.push([i+1,j+1]);
-                else if(enemycoins(matrix[i+1][j+1])==true) selectedcoinmoves.push([i+1,j+1]);
+                if(matrix[i+1][j+1]==0) {
+                    //for checking mate
+                    matrix[i+1][j+1]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i+1,j+1]);
+                    matrix[i][j]=coin;
+                    matrix[i+1][j+1]=0;
+                }
+                else if(enemycoins(matrix[i+1][j+1])==true){
+                    let ene=matrix[i+1][j+1];
+                    matrix[i+1][j+1]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i+1,j+1]);
+                    matrix[i][j]=coin;
+                    matrix[i+1][j+1]=ene;
+                }
             }
             if(i-1>=0 &&j-1>=0){
-                if(matrix[i-1][j-1]==0) selectedcoinmoves.push([i-1,j-1]);
-                else if(enemycoins(matrix[i-1][j-1])==true) selectedcoinmoves.push([i-1,j-1]);
+                if(matrix[i-1][j-1]==0){
+                    matrix[i-1][j-1]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i-1,j-1]);
+                    matrix[i-1][j-1]=0;
+                    matrix[i][j]=coin;
+                }
+                else if(enemycoins(matrix[i-1][j-1])==true) {
+                    let ene=matrix[i-1][j-1];
+                    matrix[i-1][j-1]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i-1,j-1]);
+                    matrix[i-1][j-1]=ene;
+                    matrix[i][j]=coin;
+                }
             }
             if(i-1>=0 && j+1<8){
-                if(matrix[i-1][j+1]==0) selectedcoinmoves.push([i-1,j+1]);
-                else if(enemycoins(matrix[i-1][j+1])==true) selectedcoinmoves.push([i-1,j+1]);
+                if(matrix[i-1][j+1]==0) {
+                    matrix[i-1][j+1]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i-1,j+1]);
+                    matrix[i-1][j+1]=0;
+                    matrix[i][j]=coin;
+                }
+                else if(enemycoins(matrix[i-1][j+1])==true) {
+                    let ene=matrix[i-1][j+1];
+                    matrix[i-1][j+1]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i-1,j+1]);
+                    matrix[i-1][j+1]=ene;
+                    matrix[i][j]=coin;
+                }
             }
             if(i+1<8 && j-1>=0){
-                if(matrix[i+1][j-1]==0) selectedcoinmoves.push([i+1,j-1]);
-                else if(enemycoins(matrix[i+1][j-1])==true) selectedcoinmoves.push([i+1,j-1]);
+                if(matrix[i+1][j-1]==0){
+                    matrix[i+1][j-1]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i+1,j-1]);
+                    matrix[i+1][j-1]=0;
+                    matrix[i][j]=coin;
+                }
+                else if(enemycoins(matrix[i+1][j-1])==true){
+                    let ene=matrix[i+1][j-1];
+                    matrix[i+1][j-1]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i+1,j-1]);
+                    matrix[i+1][j-1]=ene;
+                    matrix[i][j]=coin;
+                }
             }
             if(i+1<8){
-                if(matrix[i+1][j]==0) selectedcoinmoves.push([i+1,j]);
-                else if(enemycoins(matrix[i+1][j])==true) selectedcoinmoves.push([i+1,j]);
+                if(matrix[i+1][j]==0){
+                    matrix[i+1][j]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i+1,j]);
+                    matrix[i+1][j]=0;
+                    matrix[i][j]=coin;
+                }
+                else if(enemycoins(matrix[i+1][j])==true) {
+                    let ene=matrix[i+1][j];
+                    matrix[i+1][j]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i+1,j]);
+                    matrix[i+1][j]=ene;
+                    matrix[i][j]=coin;
+                }
             }
             if(i-1>=0){
-                if(matrix[i-1][j]==0) selectedcoinmoves.push([i-1,j]);
-                else if(enemycoins(matrix[i-1][j])==true) selectedcoinmoves.push([i-1,j]);
+                if(matrix[i-1][j]==0){
+                    matrix[i-i][j]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i-1,j]);
+                    matrix[i-i][j]=0;
+                    matrix[i][j]=coin;
+                }
+                else if(enemycoins(matrix[i-1][j])==true) {
+                    let ene=matrix[i-1][j];
+                    matrix[i-i][j]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i-1,j]);
+                    matrix[i-i][j]=ene;
+                    matrix[i][j]=coin;
+                }
             }
             if(j+1<8){
-                if(matrix[i][j+1]==0) selectedcoinmoves.push([i,j+1]);
-                else if(enemycoins(matrix[i][j+1])==true) selectedcoinmoves.push([i,j+1]);
+                if(matrix[i][j+1]==0){
+                    matrix[i][j+1]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i,j+1]);
+                    matrix[i][j+1]=0;
+                    matrix[i][j]=coin;
+                }
+                else if(enemycoins(matrix[i][j+1])==true) {
+                    let ene=matrix[i][j+1];
+                    matrix[i][j+1]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i,j+1]);
+                    matrix[i][j+1]=ene;
+                    matrix[i][j]=coin;
+                }
             }
             if(j-1>=0){
-                if(matrix[i][j-1]==0) selectedcoinmoves.push([i,j-1]);
-                else if(enemycoins(matrix[i][j-1])==true) selectedcoinmoves.push([i,j-1]);
+                if(matrix[i][j-1]==0){
+                    matrix[i][j-1]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i,j-1]);
+                    matrix[i][j-1]=0;
+                    matrix[i][j]=coin;
+                }
+                else if(enemycoins(matrix[i][j-1])==true) {
+                    let ene=matrix[i][j-1];
+                    matrix[i][j-1]=coin;
+                    matrix[i][j]=0;
+                    if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i,j-1]);
+                    matrix[i][j-1]=ene;
+                    matrix[i][j]=coin;
+                }
             }
         }
         else if(coin=="♘" || coin=="♞"){
@@ -501,11 +761,10 @@ let chess=function(){
         }
 
     }
-    //coinspossiblemoves()
+    //checkmovepossible()
     return{
-        allcoinmoves
+        check
     }
     
 }
-
 let game=new chess();
