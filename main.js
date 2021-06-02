@@ -34,68 +34,74 @@ let chess=function(){
     ctx.font="45px Aerial"
     ctx.fillText("♜",30,60);
     matrix[0][0]="♜";
-    playercoins["Pla1"].push("♜");
+    playercoins["Pla2"].push("♜");
     ctx.fillText("♞",130,60);
     matrix[0][1]="♞";
-    playercoins["Pla1"].push("♞");
+    playercoins["Pla2"].push("♞");
     ctx.fillText("♝",230,60);
     matrix[0][2]="♝";
-    playercoins["Pla1"].push("♝");
+    playercoins["Pla2"].push("♝");
     ctx.fillText("♛",330,60);
     matrix[0][3]="♛";
-    playercoins["Pla1"].push("♛");
+    playercoins["Pla2"].push("♛");
     ctx.fillText("♚",430,60);
     matrix[0][4]="♚";
-    playercoins["Pla1"].push("♚");
+    playercoins["Pla2"].push("♚");
     ctx.fillText("♝",530,60);
     matrix[0][5]="♝";
-    playercoins["Pla1"].push("♝");
+    playercoins["Pla2"].push("♝");
     ctx.fillText("♞",630,60);
     matrix[0][6]="♞";
-    playercoins["Pla1"].push("♞");
+    playercoins["Pla2"].push("♞");
     ctx.fillText("♜",730,60);
     matrix[0][7]="♜";
-    playercoins["Pla1"].push("♜");
+    playercoins["Pla2"].push("♜");
     let mat=[];
     for(let i=30;i<800;i+=100){
         ctx.fillText("♟",i,160);
         mat.push("♟");
-        playercoins["Pla1"].push("♟");
+        playercoins["Pla2"].push("♟");
     }
     matrix[1]=mat;
     ctx.fillStyle="black";
     ctx.font="45px Aerial"
     ctx.fillText("♖",30,760);
     matrix[7][0]="♖";
-    playercoins["Pla2"].push("♖");
+    playercoins["Pla1"].push("♖");
     ctx.fillText("♘",130,760);
     matrix[7][1]="♘";
-    playercoins["Pla2"].push("♘");
+    playercoins["Pla1"].push("♘");
     ctx.fillText("♗",230,760);
     matrix[7][2]="♗";
-    playercoins["Pla2"].push("♗");
+    playercoins["Pla1"].push("♗");
     ctx.fillText("♕",330,760);
     matrix[7][3]="♕";
-    playercoins["Pla2"].push("♕");
+    playercoins["Pla1"].push("♕");
     ctx.fillText("♔",430,760);
     matrix[7][4]="♔";
-    playercoins["Pla2"].push("♔");
+    playercoins["Pla1"].push("♔");
     ctx.fillText("♗",530,760);
     matrix[7][5]="♗";
-    playercoins["Pla2"].push("♗");
+    playercoins["Pla1"].push("♗");
     ctx.fillText("♘",630,760);
     matrix[7][6]="♘";
-    playercoins["Pla2"].push("♘");
+    playercoins["Pla1"].push("♘");
     ctx.fillText("♖",730,760);
     matrix[7][7]="♖";
-    playercoins["Pla2"].push("♖");
+    playercoins["Pla1"].push("♖");
     mat=[];
     for(let i=30;i<800;i+=100){
         ctx.fillText("♙",i,660);
         mat.push("♙");
-        playercoins["Pla2"].push("♙");
+        playercoins["Pla1"].push("♙");
     }
     matrix[6]=mat;
+    ctx.font="25px Aerial"
+    ctx.fillText("Pla1",810,760);
+    ctx.fillText("Pla2",810,60);
+    ctx.font="15px Aerial"
+    ctx.fillText("⬅️ Your Move",800,650);
+    ctx.font="45px Aerial"
     ctx.stroke();
 
     canvas.addEventListener('click', function(e) {
@@ -191,16 +197,24 @@ let chess=function(){
                     if (currentplayer=="Pla1"){
                         currentplayer="Pla2";
                         oppositeplayer="Pla1";
+                        ctx.font="15px Aerial"
+                        ctx.fillText("⬅️ Your Move",800,150);
+                        ctx.fillStyle="rgb(118, 186, 255)";
+                        ctx.fillRect(800,600,100,100);
                     }
                     else{
                         currentplayer="Pla1";
                         oppositeplayer="Pla2";
+                        ctx.font="15px Aerial"
+                        ctx.fillText("⬅️ Your Move",800,650);
+                        ctx.fillStyle="rgb(118, 186, 255)";
+                        ctx.fillRect(800,100,100,100);
                     }
                     selectedcoin=[];
                     selectedcoinmoves=[];
                 }
             });
-            document.querySelector('#player').innerHTML=currentplayer;
+            ctx.font="45px Aerial"
             if(flag==0) alert("Selected move not possible");
         }
 
