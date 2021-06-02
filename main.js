@@ -172,8 +172,15 @@ let chess=function(){
             for(let j=0;j<8;j++){
                 if(matrix[i][j]!=0){
                     findpossiblemoves(i,j);
-                    allcoinmoves[matrix[i][j]].push(selectedcoinmoves);
+                    console.log(selectedcoinmoves);
+                    if(allcoinmoves[matrix[i][j]]){
+                        selectedcoinmoves.forEach(ele => {
+                            allcoinmoves[matrix[i][j]].push(ele);
+                        });
+                    }
+                    else allcoinmoves[matrix[i][j]]=selectedcoinmoves;
                     selectedcoinmoves=[];
+                    selectedcoin=[];
                 }
             }
         }        
@@ -248,7 +255,7 @@ let chess=function(){
     let findpossiblemoves=function(i,j){
         let coin=matrix[i][j];
         selectedcoin.push(coin,i,j);
-        // console.log(coin);
+        //console.log(coin);
         if(coin==="♜" || coin==="♖"){
             //for vertical moves
             for(let a=i-1;a>=0;a--){
@@ -284,7 +291,6 @@ let chess=function(){
                     break;
                 }
             }
-            console.log(selectedcoinmoves);
         }
         else if(coin=="♟"){
             if(i==1 && matrix[i+2][j]==0) selectedcoinmoves.push([i+2,j]);
@@ -336,7 +342,6 @@ let chess=function(){
             a=i+1;
             b=j-1;
             while(a<8 && b>=0){
-                console.log(matrix[a][b])
                 if(matrix[a][b]==0) selectedcoinmoves.push([a++,b--]);
                 else if(enemycoins(matrix[a][b])==true){
                     selectedcoinmoves.push([a,b]);
@@ -416,7 +421,6 @@ let chess=function(){
             a=i+1;
             b=j-1;
             while(a<8 && b>=0){
-                console.log(matrix[a][b])
                 if(matrix[a][b]==0) selectedcoinmoves.push([a++,b--]);
                 else if(enemycoins(matrix[a][b])==true){
                     selectedcoinmoves.push([a,b]);
