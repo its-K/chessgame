@@ -10,7 +10,7 @@ let chess=function(){
     let playercoins={"Pla1":[],"Pla2":[]};
     let canvas=document.getElementById('mycanvas');
     let ctx=canvas.getContext('2d');
-
+    var alertaudio = new Audio("ding.mp3");
     let col="grey";
     for(let i=100;i<801;i+=100){
         let col1=col;
@@ -158,12 +158,19 @@ let chess=function(){
         return false;
     }
 
+    let selectedcoinhighlight=function(coin,x,y){
+        ctx.fillStyle="#38DF96";
+        ctx.fillRect(x*100,y*100,100,100);
+        ctx.fillStyle="black";
+        ctx.fillText(coin,(x*100)+30,(y*100)+60);
+    }
+
     let checkmate=function(){
         let opcoins=playercoins[oppositeplayer];
         for(let i=0;i<opcoins.length;i++){
-            if(opcoins[i]=="♕" || opcoins[i]=="♛") return true
+            if(opcoins[i]=="♕" || opcoins[i]=="♛") return false
         }
-        return false;
+        return true;
     }
 
     let move=function(x,y){
@@ -171,7 +178,10 @@ let chess=function(){
         if(selectedcoin.length==0){
             let coin=matrix[a[0]][a[1]];
             if(findcurrentplayer(coin)==false) alert("This is not your move !") 
-            else findpossiblemoves(a[0],a[1]);
+            else{
+                findpossiblemoves(a[0],a[1]);
+                selectedcoinhighlight(coin,a[1],a[0]);
+            }
         }
         else{
             let flag=0;
@@ -179,6 +189,7 @@ let chess=function(){
                 if(ele[0]==a[0] && ele[1]==a[1]){
                     if(matrix[a[0]][a[1]]!=0){
                         removeenemycoins(matrix[a[0]][a[1]]);
+                        alertaudio.play();
                     }
                     matrix[selectedcoin[1]][selectedcoin[2]]=0
                     matrix[a[0]][a[1]]=selectedcoin[0];
@@ -190,7 +201,7 @@ let chess=function(){
                     ctx.fillStyle="black";
                     ctx.fillText(selectedcoin[0],(a[1]*100)+30,(a[0]*100)+60);
                     flag=1;
-                    if(checkmate()==false){
+                    if(checkmate()==true){
                         alert(`${currentplayer} wins  🎉`)
                         rungame=false;
                     }
@@ -471,13 +482,6 @@ let chess=function(){
             }
         }
 
-    }
-
-    return{
-        matrix,
-        selectedcoinmoves,
-        selectedcoin,
-        playercoins
     }
     
 }
