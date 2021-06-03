@@ -306,6 +306,31 @@ let chess=function(){
                 if(matrix[i-1][j-2]=="♘" || matrix[i-1][j-2]=="♞") return true;
             }
         }
+        //for pawn moves
+        if(check[currentplayer][0]=="♚"){
+            if(i+1<8 && j+1<8){
+                if(enemycoins(matrix[i+1][j+1])==true){
+                    if(matrix[i+1][j+1]=="♙") return true;
+                }
+            }
+            if(i+1<8 && j-1>=0){
+                if(enemycoins(matrix[i+1][j-1])==true){
+                    if(matrix[i+1][j-1]=="♙") return true;
+                }
+            }
+        }
+        if(check[currentplayer][0]=="♔"){
+            if(i-1>=0 && j-1>=0){
+                if(enemycoins(matrix[i-1][j-1])==true){
+                    if(matrix[i-1][j-1]=="♟") return true;
+                }
+            }
+            if(i-1>=0 && j+1<8){
+                if(enemycoins(matrix[i-1][j+1])==true){
+                    if(matrix[i-1][j+1]=="♟") return true;
+                }
+            }
+        }
 
         return false;
     }
