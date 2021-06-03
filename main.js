@@ -354,14 +354,6 @@ let chess=function(){
         return false;
     }
 
-    let checkmate=function(){
-        let opcoins=playercoins[oppositeplayer];
-        for(let i=0;i<opcoins.length;i++){
-            if(opcoins[i]=="♚" || opcoins[i]=="♔") return false
-        }
-        return true;
-    }
-
     let clearselected=function(){
         let col=matrixcolor[selectedcoin[1]][selectedcoin[2]];
         ctx.fillStyle=col;
@@ -412,10 +404,6 @@ let chess=function(){
                         ctx.fillStyle="black";
                         ctx.fillText(selectedcoin[0],(a[1]*100)+30,(a[0]*100)+60);
                         flag=1;
-                        if(checkmate()==true){
-                            alert(`${currentplayer} wins  🎉`)
-                            rungame=false;
-                        }
                         if (currentplayer=="Pla1"){
                             currentplayer="Pla2";
                             oppositeplayer="Pla1";
@@ -1090,11 +1078,6 @@ let chess=function(){
             }
         }
 
-    }
-    //checkmovepossible()
-    return{
-        check,
-        clearselected
     }
     
 }
