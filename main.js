@@ -114,7 +114,7 @@ let chess=function(){
         const rect = canvas.getBoundingClientRect()
         const x =Math.round(event.clientX - rect.left);
         const y =Math.round(event.clientY - rect.top);
-        if(rungame==true) move(x,y);
+        if(rungame==true) movement(x,y);
         else alert("Game over !. Restart game");
     }
 
@@ -336,21 +336,19 @@ let chess=function(){
     }
 
     let checkmovepossible=function(player){
-        console.log("Check logic");
+        //console.log("Check logic");
         let king=check[player][0];
         for(let i=0;i<8;i++){
             for(let j=0;j<8;j++){
                 if(matrix[i][j]==king){
                     if(kingcheckmoves(i,j)==true) {
                         check[player][1]=true;
-                        console.log(true);
                         return true;
                     }
                 }
             }
         }
         check[player][1]=false;
-        console.log(false);
         return false;
     }
 
@@ -363,9 +361,31 @@ let chess=function(){
         selectedcoin=[];
         selectedcoinmoves=[];
     }
+    
+    let movement=function(x,y){
+        if(window.Worker){
+            // chrome doesnt allow worker files from local
+            try{
+                var myWorker = new Worker('matrixposition.js');
+                myWorker.postMessage([x,y]);
+                myWorker.onmessage = function(e){
+                    a=e.data;
+                    move(a);
+                    myWorker.terminate();
+                }
+            }
+            catch{
+                let a=matrixposition(x,y);
+                move(a);
+            }
+        }
+        else{
+            let a=matrixposition(x,y);
+            move(a);
+        }
+    }
 
-    let move=function(x,y){
-        let a=matrixposition(x,y);
+    let move=function(a){
         if(selectedcoin.length==0){
             let coin=matrix[a[0]][a[1]];
             if(findcurrentplayer(coin)==false) alert("This is not your move !") 
