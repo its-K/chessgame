@@ -415,6 +415,9 @@ let chess=function(){
                             alertaudio.play();
                         }
                         matrix[selectedcoin[1]][selectedcoin[2]]=0
+                        //for pawn promotion
+                        if(selectedcoin[0]=="♟" && a[0]==7) selectedcoin[0]="♛";
+                        if(selectedcoin[0]=="♙" && a[0]==0) selectedcoin[0]="♕";
                         matrix[a[0]][a[1]]=selectedcoin[0];
                         let col=matrixcolor[selectedcoin[1]][selectedcoin[2]];
                         ctx.fillStyle=col;
