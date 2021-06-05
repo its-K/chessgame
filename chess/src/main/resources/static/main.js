@@ -2,6 +2,8 @@ let matrix=[];
 let currentplayer="Pla1";
 let oppositeplayer="Pla2";
 let gameid="";
+let check={"Pla1":["♔",false],"Pla2":["♚",false]};
+
 let chess=function(){
     let selectedcoin=[];
     let selectedcoinmoves=[];
@@ -14,7 +16,6 @@ let chess=function(){
     let ctx=canvas.getContext('2d');
     var alertaudio = new Audio("ding.mp3");
     //for check mate
-    let check={"Pla1":["♔",false],"Pla2":["♚",false]};
 
     function initialize(){  
         let col="grey";
@@ -60,8 +61,8 @@ let chess=function(){
 
         //for palyer identification
         ctx.font="25px Aerial"
-        ctx.fillText("Pla1",810,760);
-        ctx.fillText("Pla2",810,60);
+        ctx.fillText(check["Pla1"][2],810,760);
+        ctx.fillText(check["Pla2"][2],810,60);
         ctx.font="15px Aerial"
         if(currentplayer=="Pla1"){
             ctx.fillText("⬅️ Your Move",800,650);
@@ -1077,12 +1078,12 @@ let chess=function(){
     }
 }
 
-game=new chess();
 
-function start(){
+function loadGame(gameidTemp){
+    if(gameidTemp==null) gameidTemp=document.querySelector("#gameid").value;
     $.ajax({ 
         type: 'GET',
-        url: 'http://127.0.0.1:8080/loadgame?gameid=e564d597bab74bf9ba16c7307ed81778', 
+        url: '/loadgame?gameid='+gameidTemp, 
         success: function(response){
             try {
                 let json=JSON.parse(response.board);
@@ -1090,10 +1091,17 @@ function start(){
             } catch (error) {
                 matrix=response.board;
             }
-            currentplayer=response.currentplayer;
-            oppositeplayer="Pla2";
-            gameid=response.gameid;
-            game.initialize();
+            if(matrix.length>=0){
+                document.querySelector(".game").innerHTML=`<canvas id="mycanvas" width="900px" height="800px" style="display: block;margin-top: 20px;"></canvas>`;
+                document.querySelector("#gameid_show").textContent=response.gameid;
+                game=new chess();
+                currentplayer=response.currentplayer;
+                oppositeplayer="Pla2";
+                gameid=response.gameid;
+                check["Pla1"].push(response.pla1);
+                check["Pla2"].push(response.pla2);
+                game.initialize();
+            }
         },
         error: function(response){
             console.log(response);
@@ -1105,7 +1113,7 @@ function updatemove(){
     arr={"gameid":gameid,"board":matrix,"currentPlayer":currentplayer};
     $.ajax({ 
         type: 'POST',
-        url: 'http://127.0.0.1:8080/updategame', 
+        url: '/updategame', 
         data: JSON.stringify(arr),
         headers: {
             'Content-Type': 'application/json',
@@ -1119,4 +1127,27 @@ function updatemove(){
     });
 }
 
-start();
+function createGame(){
+    let pla1=document.getElementById("pla1").value;
+    let pla2=document.getElementById("pla2").value;
+    let arr={"pla1":pla1,"pla2":pla2,"gamtype":""};
+    let radios=document.getElementsByName("gametype");
+    for(let ele of radios){
+        if(ele.selected) arr["gamtype"]=ele;
+    }
+    $.ajax({ 
+        type: 'POST',
+        url: '/newgame', 
+        data: JSON.stringify(arr),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        success: function(response){ 
+            console.log(response);
+            loadGame(response.gameid);
+        },
+        error: function(response){
+            console.log(response);
+        }
+    });
+}

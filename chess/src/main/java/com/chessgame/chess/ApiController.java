@@ -43,11 +43,11 @@ public class ApiController {
         gameid=gameid.replaceAll("-", "");
         CoinsBuild board=new CoinsBuild();
         String boardData=board.boardData().toJSONString();
-        String sql = "INSERT INTO game (gameid, pla1, pla2, status, gametype, currentpla, board) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        int result = jdbcTemplate.update(sql, gameid, game.getpla1(), game.getpla2(), game.getstatus(),game.getgametype(), game.getCurrentplayer(), boardData);
+        String sql = "INSERT INTO game (gameid, pla1, pla2, gametype, currentpla, board) VALUES (?, ?, ?, ?, ?, ?)";
+        int result = jdbcTemplate.update(sql, gameid, game.getpla1(), game.getpla2(), game.getgametype(), "Pla1", boardData);
         if (result > 0) {
-            res.put("Status","Sucess");
-            res.put("GameID", gameid);
+            res.put("status","Sucess");
+            res.put("gameid", gameid);
             return res;
         }
         res.put("Status", "Internal Server Error");
@@ -65,6 +65,9 @@ public class ApiController {
                 if(currentgame.getMovecount()>=gameStore){
                     if(updateDB(game)){
                         currentgame.setMovecount(0);
+                    }
+                    else{
+                        System.out.println("Not Inserted in DB");
                     }
                 }
                 else{
