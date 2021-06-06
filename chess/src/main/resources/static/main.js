@@ -1096,7 +1096,8 @@ function loadGame(gameidTemp){
                 document.querySelector("#gameid_show").textContent=response.gameid;
                 game=new chess();
                 currentplayer=response.currentplayer;
-                oppositeplayer="Pla2";
+                if(currentplayer=="Pla1") oppositeplayer="Pla2";
+                else oppositeplayer="Pla1";
                 gameid=response.gameid;
                 check["Pla1"].push(response.pla1);
                 check["Pla2"].push(response.pla2);
