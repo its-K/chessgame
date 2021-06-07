@@ -360,23 +360,18 @@ let chess=function(){
     }
     
     let movement=function(x,y){
-        if(window.Worker){
-            // chrome doesnt allow worker files from local
-            try{
-                var myWorker = new Worker('matrixposition.js');
-                myWorker.postMessage([x,y]);
-                myWorker.onmessage = function(e){
-                    a=e.data;
-                    move(a);
-                    myWorker.terminate();
-                }
+        try{
+            async function fetchAndInstantiate() {
+                const response = await fetch("program.wasm");
+                const buffer = await response.arrayBuffer();
+                const obj = await WebAssembly.instantiate(buffer);
+                let a=(obj.instance.exports.xposition(x));
+                let b=(obj.instance.exports.yposition(y));  
+                move([b,a]);
             }
-            catch{
-                let a=matrixposition(x,y);
-                move(a);
-            }
+            fetchAndInstantiate();
         }
-        else{
+        catch{
             let a=matrixposition(x,y);
             move(a);
         }
