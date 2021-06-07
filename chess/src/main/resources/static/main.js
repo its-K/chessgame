@@ -130,6 +130,20 @@ let chess=function(){
         return false;
     }
 
+    let selectedcoinmoveshighlight=function(){
+        for(let i=0;i<selectedcoinmoves.length;i++){
+            let x=selectedcoinmoves[i][1];
+            let y=selectedcoinmoves[i][0];
+            console.log(x,y);
+            ctx.fillStyle="#ffffcc";
+            ctx.fillRect(x*100,y*100,100,100);
+            ctx.fillStyle="black";
+            if(matrix[y][x]!="0"){
+                ctx.fillText(matrix[y][x],(x*100)+30,(y*100)+60);
+            }
+        }
+    }
+
     let selectedcoinhighlight=function(coin,x,y){
         ctx.fillStyle="#38DF96";
         ctx.fillRect(x*100,y*100,100,100);
@@ -322,13 +336,26 @@ let chess=function(){
         return false;
     }
 
-    let clearselected=function(){
-        let col=matrixcolor[selectedcoin[1]][selectedcoin[2]];
-        ctx.fillStyle=col;
-        ctx.fillRect(selectedcoin[2]*100,selectedcoin[1]*100,100,100);
-        ctx.fillStyle="black";
-        ctx.fillText(selectedcoin[0],(selectedcoin[2]*100)+30,(selectedcoin[1]*100)+60);
+    let clearselected=function(isMove){
+        ctx.font="45px Aerial";
+        if(isMove==true){
+            let col1=matrixcolor[selectedcoin[1]][selectedcoin[2]];
+            ctx.fillStyle=col1;
+            ctx.fillRect(selectedcoin[2]*100,selectedcoin[1]*100,100,100);
+            ctx.fillStyle="black";
+            ctx.fillText(selectedcoin[0],(selectedcoin[2]*100)+30,(selectedcoin[1]*100)+60);
+        }
         selectedcoin=[];
+        selectedcoinmoves.forEach(ele => {
+            let x=ele[1];
+            let y=ele[0];
+            let col=matrixcolor[y][x];
+            ctx.fillStyle=col;
+            ctx.fillRect(x*100,y*100,100,100);
+            ctx.fillStyle="black";
+            if(matrix[y][x]!="0")
+            ctx.fillText(matrix[y][x],(x*100)+30,(y*100)+60);
+        });
         selectedcoinmoves=[];
     }
     
@@ -361,10 +388,12 @@ let chess=function(){
             if(findcurrentplayer(coin)==true){
                 findpossiblemoves(a[0],a[1]);
                 selectedcoinhighlight(coin,a[1],a[0]);
+                selectedcoinmoveshighlight();
             }
         }
         else if(selectedcoin[1]==a[0] && selectedcoin[2]==a[1]){
-            clearselected();
+            clearselected(true);
+            selectedcoinmoves=[];
         }
         else{
             let flag=0;
@@ -412,8 +441,7 @@ let chess=function(){
                             ctx.fillStyle="rgb(118, 186, 255)";
                             ctx.fillRect(800,100,100,100);
                         }
-                        selectedcoin=[];
-                        selectedcoinmoves=[];
+                        clearselected(false);
                         if(checkmovepossible(currentplayer)==true){
                             alert("Check !");
                         }
@@ -1074,7 +1102,8 @@ let chess=function(){
     }
     
     return{
-        initialize
+        initialize,
+        selectedcoinmoves
     }
 }
 
