@@ -532,10 +532,11 @@ let chess=function(){
                     matrix[i][j]=coin;
                     break;
                 }
+                else break;
             }
         }
         else if(coin=="♟"){
-            if(i==1 && matrix[i+2][j]=="0"){
+            if(i==1 && matrix[i+2][j]=="0" && matrix[i+1][j]=="0"){
                 matrix[i+2][j]=coin;
                 matrix[i][j]="0";
                 if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i+2,j]);
@@ -568,7 +569,7 @@ let chess=function(){
             }
         }
         else if(coin=="♙"){
-            if(i==6 && matrix[i-2][j]=="0"){
+            if(i==6 && matrix[i-2][j]=="0" && matrix[i-1][j]=="0"){
                 matrix[i-2][j]=coin;
                 matrix[i][j]="0";
                 if(checkmovepossible(currentplayer)==false) selectedcoinmoves.push([i-2,j]);
@@ -774,6 +775,7 @@ let chess=function(){
                     matrix[i][j]=coin;
                     break;
                 }
+                else break;
             }
 
             //for diagonal
